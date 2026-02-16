@@ -3,14 +3,14 @@ FROM node:20-alpine AS frontend
 
 WORKDIR /app
 
-# 複製依賴
+# 安裝依賴
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
 
-# 複製源碼
+# 製製源碼
 COPY frontend/ .
 
-# 建置
+# 構建
 RUN npm run build
 
 # Nginx - 服務前端
@@ -32,7 +32,7 @@ WORKDIR /app
 COPY backend-gateway/api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 複製源碼
+# 製製源碼
 COPY backend-gateway/ .
 
 # 初始化資料庫
