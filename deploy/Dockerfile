@@ -10,13 +10,15 @@ RUN npm install
 # 製製源碼
 COPY frontend/ .
 
-# 構建
-RUN npm run build
+# 構建並保持 dist 目錄
+RUN npm run build && ls -la dist/
 
 # Nginx - 服務前端
 FROM nginx:alpine AS frontend-server
 
+# 複製構建產物（相對路徑，因為 frontend 階段的 WORKDIR 是 /app）
 COPY --from=frontend /app/dist /usr/share/nginx/html
+
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
@@ -32,7 +34,7 @@ WORKDIR /app
 COPY backend-gateway/api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 製製源碼
+# 複製源碼
 COPY backend-gateway/ .
 
 # 初始化資料庫
