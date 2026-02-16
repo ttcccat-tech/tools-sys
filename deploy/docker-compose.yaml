@@ -2,27 +2,27 @@ version: '3.8'
 
 services:
   # 前端服務
-  frontend:
+  tool-frontend:
     build:
       context: .
       dockerfile: deploy/Dockerfile
       target: frontend-server
     ports:
-      - "80:80"
+      - "3031:80"
     depends_on:
-      - backend
+      - tool-backend
     restart: unless-stopped
     networks:
       - tools-sys-network
 
   # 後端服務
-  backend:
+  tool-backend:
     build:
       context: .
       dockerfile: deploy/Dockerfile
       target: backend
     ports:
-      - "8000:8000"
+      - "3032:8000"
     volumes:
       - ./db:/app/db
     environment:
