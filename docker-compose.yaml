@@ -1,0 +1,29 @@
+services:
+  # 單個全棧容器（Nginx + 靜態文件 + FastAPI）
+  tools-sys:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      target: tools-sys-full
+    container_name: tools-sys-full
+    ports:
+      - "3035:80"  # 前端 + API 統一端口
+    volumes:
+      - db:/app/db
+    environment:
+      - DB_PATH=/app/db/tools.db
+      - SECRET_KEY=tools-sys-secret-key-change-in-production
+      - NODE_ENV=production
+      - FLASK_ENV=production
+      - FLASK_DEBUG=false
+    restart: unless-stopped
+    networks:
+      - tools-sys-network
+
+networks:
+  tools-sys-network:
+    driver: bridge
+
+volumes:
+  db:
+    driver: local

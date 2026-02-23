@@ -1,0 +1,45 @@
+services:
+  # 測試環境 - 前端服務
+  tool-frontend-test:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      target: frontend-server
+    ports:
+      - "3033:80"  # 使用測試環境端口
+    depends_on:
+      - tool-backend-test
+    restart: unless-stopped
+    networks:
+      - tools-sys-test-network
+    environment:
+      - NODE_ENV=test
+      - VITE_MODE=test
+
+  # 測試環境 - 後端服務
+  tool-backend-test:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile
+      target: backend
+    ports:
+      - "3034:8000"  # 使用測試環境端口
+    volumes:
+      - db-test:/app/db
+    environment:
+      - DB_PATH=/app/db/tools-test.db
+      - SECRET_KEY=test-secret-key-change-in-test-environment
+      - NODE_ENV=test
+      - FLASK_ENV=testing
+      - FLASK_DEBUG=false
+    restart: unless-stopped
+    networks:
+      - tools-sys-test-network
+
+networks:
+  tools-sys-test-network:
+    driver: bridge
+
+volumes:
+  db-test:
+    driver: local

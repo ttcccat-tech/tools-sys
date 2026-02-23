@@ -1,423 +1,418 @@
 # Tools-Sys 開發規範
 
-## 🎯 專案目標
+## ⏰ 每日例行任務
 
-**專業開發者工具系統** - 簡潔、高效、模組化
+### 時間安排（台北時間 UTC+8）
 
----
-
-## 📁 專案結構
-
-```
-tools-sys/
-├── CLAUDE.md                    # 本文件（全局規則）
-├── backend/                      # FastAPI 後端
-│   ├── CLAUDE.md                # 後端開發規則
-│   ├── main.py
-│   ├── requirements.txt
-│   └── ...
-├── frontend/                     # React 前端
-│   ├── CLAUDE.md                # 前端開發規則
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── components/
-│   │   │   └── Login.jsx
-│   │   ├── main.jsx
-│   │   └── ...
-│   ├── package.json
-│   ├── vite.config.js
-│   └── ...
-└── deploy/                       # Docker 部署
-    ├── Dockerfile
-    ├── docker-compose.yaml
-    └── nginx.conf
-```
+| 時間 | 任務 | 執行內容 | 優先級 |
+|------|------|----------|--------|
+| **02:00** | Nightly Self-Improvement | 分析系統日誌、識別瓶頸、優化工作流 | 🔴 高 |
+| **03:00** | 早晨例行檢查 | 檢查未安排任務時間的工作 | 🔵 中 |
+| **15:00** | 財經分析報告 | 分析 Gmail 財經電子報，生成報告 | 🟠 中 |
+| **21:00** | 晚上例行檢查 | 檢查未安排任務時間的工作 | 🔵 中 |
 
 ---
 
-## 🔄 Git 工作流程
+## 🧪 早晨例行檢查（每天 11:00 UTC）
 
-### 常用命令
+### 檢查內容
+
+1. ✅ **檢查 Worker Dashboard 任務狀態**
+   - 檢查是否有過期任務
+   - 檢查是否有未完成的任務
+   - 檢查任務分配是否合理
+
+2. ✅ **檢查開發中的專案進度**
+   - 檢查 Tools-Sys 開發進度
+   - 檢查其他開發中專案
+   - 識別可能的瓶頸
+
+3. ✅ **執行任何未完成的工作**
+   - 如果有未完成的 Git 提交，立即完成
+   - 如果有未完成的功能，立即完成
+   - 如果有未修復的 Bug，立即修復
+
+4. ✅ **報告完成狀態**
+   - 生成完成報告
+   - 通知老闆所有已完成的工作
+   - 列出待辦事項
+
+---
+
+## 🧪 晚上例行檢查（每天 21:00 UTC）
+
+### 檢查內容
+
+1. ✅ **檢查所有專案的 Git 狀態**
+   - 檢查是否有未推送的 commit
+   - 檢查是否有未合併的 branch
+   - 清理未使用的 branch
+
+2. ✅ **檢查系統健康狀態**
+   - 檢查磁碟使用率
+   - 檢查記憶體使用率
+   - 檢查 Docker 容器狀態
+
+3. ✅ **檢查運行中的任務**
+   - 檢查 Nightly Self-Improvement 任務狀態
+   - 檢查財經分析報告任務狀態
+   - 確認所有任務正常運行
+
+4. ✅ **準備下一天的工作**
+   - 優先級排序待辦事項
+   - 規劃下一天的開發時間
+   - 準備開發環境和工具
+
+5. ✅ **報告完成狀態**
+   - 生成每日完成報告
+   - 通知老闆所有已完成的工作
+   - 列出下一天的計劃
+
+---
+
+## 🔄 每日例行任務流程
+
+### 早晨例行檢查（11:00 UTC）
 
 ```bash
-# 查看狀態
+# 1. 檢查 Worker Dashboard
+curl -s http://localhost:3003/api/tasks | python3 -m json.tool
+
+# 2. 檢查開發專案 Git 狀態
+cd /home/user/repo/tools-sys
 git status
 
-# 添加所有修改
-git add .
+# 3. 檢查系統健康狀態
+df -h | grep -E "sda|sdb|sdc"
+free -h
 
-# 提交（遵循規範）
-git commit -m "type(scope): subject"
+# 4. 檢查 Docker 容器
+docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.CreatedAt}}"
 
-body
-
-footer
-
-# 推送到遠端
-git push
-
-# 拉取最新代碼
-git pull
+# 5. 生成完成報告
+echo "早晨例行檢查完成：$(date)"
 ```
 
-### 提交訊息規範
+### 晚上例行檢查（21:00 UTC）
 
-```
-type(scope): subject
-
-# 空行
-
-body（可選）
-
-# 空行
-
-footer（可選）
-```
-
-#### type（類型）
-- `feat`: 新功能
-- `fix`: Bug 修復
-- `docs`: 文件更新
-- `refactor`: 重構（不改功能）
-- `perf`: 性能優化
-- `style`: 代碼風格調整
-- `test`: 添加測試
-- `chore`: 其他改動
-
-#### scope（範圍）
-- `frontend`: 前端相關
-- `backend`: 後端相關
-- `deploy`: 部署相關
-- `docs`: 文檔相關
-- `style`: 代碼風格
-
-#### 範例
-
-```
-feat(frontend): 添加用戶登入頁面
-
-實作登入表單和驗證邏輯。
-整合 Tailwind CSS 組件樣式。
-
-- 添加 Login.jsx 組件
-- 更新 App.jsx 路由邏輯
-- 設定登入/登出狀態管理
-
-Co-Authored-By: Cat <cat@tools-sys.com>
-```
-
----
-
-## 🧪 開發環境
-
-### 生產環境
-- **前端**：http://localhost:3033/
-- **後端**：http://localhost:3034/
-- **Docker Compose**：`docker-compose.yaml`
-
-### 測試環境
-- **前端**：http://localhost:3033/
-- **後端**：http://localhost:3034/
-- **Docker Compose**：`docker-compose.test.yaml`
-
-### 開發環境
-- **前端**：`cd frontend && npm run dev` (端口：3000)
-- **後端**：`cd backend && python -m uvicorn main:app --reload` (端口：8000)
-
----
-
-## 📋 檢查清單
-
-在提交代碼前，請確保：
-
-### 代碼質量
-- ✅ 代碼通過 ESLint 檢查
-- ✅ 所有 console.log 已移除（除調試用）
-- ✅ 無用的變數和函數已刪除
-- ✅ 代碼格式一致（使用 Prettier）
-- ✅ 適守項目命名規範
-
-### 測試覆蓋
-- ✅ 新功能有對應的測試用例
-- ✅ 所有測試通過
-- ✅ 無警告或錯誤訊息
-
-### 文檔更新
-- ✅ README.md 已更新（如有需要）
-- ✅ API 文檔已更新（如有需要）
-- ✅ 代碼註釋清晰明了
-- ✅ 變更日誌已記錄
-
-### 安全檢查
-- ✅ 沒有硬編碼的密碼或金鑰
-- ✅ 所有敏感數據使用環境變數
-- ✅ 沒有已知的 CVE 漏洞
-- ✅ 依賴包版本安全
-
----
-
-## 🔍 代碼審查流程
-
-### 自我審查清單
-
-在提交前，問自己：
-
-1. **功能性**：
-   - 這個 PR/commit 能解決什麼問題？
-   - 是否符合需求規範？
-   - 是否有副作用？
-
-2. **代碼質量**：
-   - 代碼是否容易理解？
-   - 是否有重複邏輯？
-   - 是否遵循最佳實踐？
-
-3. **性能**：
-   - 是否會引入性能問題？
-   - 是否有內存洩漏風險？
-   - 是否有潛在的延遲問題？
-
-4. **測試**：
-   - 是否覆蓋所有邊界情況？
-   - 是否有回歸測試？
-   - 測試用例是否清晰？
-
----
-
-## 📚 知識庫
-
-### 技術文檔
-- [React 官方文檔](https://react.dev/)
-- [Tailwind CSS 文檔](https://tailwindcss.com/)
-- [FastAPI 官方文檔](https://fastapi.tiangolo.com/)
-- [Docker 官方文檔](https://docs.docker.com/)
-
-### 項目指南
-- [Python PEP 8](https://peps.python.org/pep-0008/)
-- [React 樣程指南](https://react.dev/learn)
-- [Google JavaScript 風格指南](https://google.github.io/styleguide/jsguide.html)
-
----
-
-## 🚀 部署流程
-
-### 開發環境 → 測試環境
 ```bash
-# 1. 推送到 Git
-git push
+# 1. 檢查所有 Git 狀態
+cd /home/user/repo/tools-sys
+git status
+git fetch --all --prune
 
-# 2. CI/CD 自動部署到測試環境
-# 3. 在測試環境驗證功能
+# 2. 檢查系統健康狀態
+df -h | grep -E "sda|sdb|sdc"
+free -h
+top -bn1 | head -20
+
+# 3. 檢查 Docker 容器
+docker ps -a
+docker system df -v | grep -E "local|Images|Containers"
+
+# 4. 生成完成報告
+echo "晚上例行檢查完成：$(date)"
 ```
 
-### 測試環境 → 生產環境
+---
+
+## 📊 任務優先級規則
+
+### 高優先級（立即執行）
+
+1. ❌ **未完成的緊急 Bug**
+   - 影響系統正常運行
+   - 安全漏洞
+   - 數據丟失風險
+
+2. ❌ **未完成的高優先級功能**
+   - 老闆指定的重要功能
+   - 已經承諾的交付物
+
+3. ❌ **過期任務**
+   - 已經超過截止日期的任務
+   - 影響其他團隊成員的工作
+
+### 中優先級（當天完成）
+
+1. ⏸️ **未完成的普通功能**
+   - 老闆要求的正常功能
+   - 不影響系統正常運行
+
+2. ⏸️ **技術債務**
+   - 重構舊代碼
+   - 性能優化
+   - 測試覆蓋率提升
+
+3. ⏸️ **文檔更新**
+   - API 文檔更新
+   - README 更新
+   - 開發者文檔
+
+### 低優先級（有空時完成）
+
+1. ⏳ **代碼質量改進**
+   - 添加註釋
+   - 重命名變量
+   - 改進函數結構
+
+2. ⏳ **單元測試**
+   - 提高測試覆蓋率
+   - 添加邊界測試
+   - 改進測試質量
+
+---
+
+## 📅 每日例行任務記錄模板
+
+### 早晨例行檢查記錄
+
+```markdown
+## 早晨例行檢查 - [日期]
+
+### 檢查時間
+- 開始時間：[時間]
+- 完成時間：[時間]
+- 總耗時：[分鐘]
+
+### Worker Dashboard 檢查
+
+#### 過期任務
+- [列出所有過期任務]
+
+#### 未完成任務
+- [列出所有未完成任務]
+
+#### 任務分配
+- [分析任務分配是否合理]
+
+### 開發專案進度
+
+#### Tools-Sys
+- 狀態：[進行中/完成/暫停]
+- 下一步：[下一步計劃]
+- 瓶頸：[識別的瓶頸]
+
+#### 其他專案
+- [列出其他專案及其狀態]
+
+### 系統健康檢查
+
+#### 磁碟使用
+- [磁碟使用情況]
+
+#### 記憶體使用
+- [記憶體使用情況]
+
+#### Docker 容器
+- [所有容器狀態]
+
+### 執行的未完成工作
+
+1. [列出執行的工作 1]
+2. [列出執行的工作 2]
+3. [列出執行的工作 3]
+
+### 完成狀態報告
+
+- ✅ [完成的工作 1]
+- ✅ [完成的工作 2]
+- ⏸️ [未完成的工作 1]
+- ⏸️ [未完成的工作 2]
+
+### 待辦事項
+
+- [ ] [待辦事項 1]
+- [ ] [待辦事項 2]
+- [ ] [待辦事項 3]
+```
+
+### 晚上例行檢查記錄
+
+```markdown
+## 晚上例行檢查 - [日期]
+
+### 檢查時間
+- 開始時間：[時間]
+- 完成時間：[時間]
+- 總耗時：[分鐘]
+
+### Git 狀態檢查
+
+#### Tools-Sys
+- 未推送的 commits：[數量]
+- 未合併的 branches：[數量]
+- HEAD 狀態：[分支名稱]
+
+#### 其他專案
+- [列出其他專案的 Git 狀態]
+
+### 系統健康檢查
+
+#### 磁碟使用
+- [磁碟使用情況]
+
+#### 記憶體使用
+- [記憶體使用情況]
+
+#### Docker 容器
+- [所有容器狀態]
+- [磁碟使用統計]
+
+### 運行中的任務檢查
+
+#### Nightly Self-Improvement
+- 最後執行：[時間]
+- 最後狀態：[成功/失敗]
+- 完成的工作：[完成項目]
+
+#### 財經分析報告
+- 最後執行：[時間]
+- 最後狀態：[成功/失敗]
+- 發送的報告：[是/否]
+
+### 執行的未完成工作
+
+1. [列出執行的工作 1]
+2. [列出執行的工作 2]
+3. [列出執行的工作 3]
+
+### 下一天工作計劃
+
+1. [優先級 1 任務]
+2. [優先級 2 任務]
+3. [優先級 3 任務]
+
+### 完成狀態報告
+
+- ✅ [完成的工作 1]
+- ✅ [完成的工作 2]
+- ⏸️ [未完成的工作 1]
+- ⏸️ [未完成的工作 2]
+
+### 待辦事項
+
+- [ ] [待辦事項 1]
+- [ ] [待辦事項 2]
+- [ ] [待辦事項 3]
+```
+
+---
+
+## 🔧 自動化腳本
+
+### 早晨例行檢查腳本
+
 ```bash
-# 1. 在測試環境完成驗證
-# 2. 標記版本為 stable
-git tag -a v1.0.0 -m "Release version 1.0.0"
+#!/bin/bash
 
-# 3. 推送到 Git
-git push --tags
+# 早晨例行檢查腳本
+# 執行時間：每天 11:00 UTC (台北時間 19:00)
 
-# 4. CI/CD 自動部署到生產環境
+echo "🌅 早晨例行檢查開始：$(date '+%Y-%m-%d %H:%M:%S')"
+
+# 1. 檢查 Worker Dashboard
+echo "📊 檢查 Worker Dashboard..."
+TASKS=$(curl -s http://localhost:3003/api/tasks)
+echo "$TASKS" | python3 -m json.tool > /tmp/morning_dashboard_check.json
+
+# 2. 檢查系統健康
+echo "💾 檢查系統健康..."
+DISK=$(df -h | grep -E "sda|sdb|sdc")
+echo "$DISK"
+MEM=$(free -h)
+echo "$MEM"
+
+# 3. 檢查 Docker 容器
+echo "🐳 檢查 Docker 容器..."
+CONTAINERS=$(docker ps -a --format "table {{.Names}}\t{{.Status}}")
+echo "$CONTAINERS"
+
+# 4. 生成報告
+echo "✅ 早晨例行檢查完成：$(date '+%Y-%m-%d %H:%M:%S')"
 ```
 
----
+### 晚上例行檢查腳本
 
-## 🆘 緊急修復流程
-
-### 嚴重 Bug
-1. 在 Hotfix 分支修復
-2. 快速測試（跳過完整 QA）
-3. 合併到 main 分支
-4. 立即部署到生產環境
-
-### 一般 Bug
-1. 在 Feature 分支修復
-2. 完整測試和 QA
-3. 發起 PR 給團隊審查
-4. 合併到 main 分支
-5. 下一個部署週期部署
-
----
-
-## 📈 監控和日誌
-
-### 前端監控
-- **Google Analytics**：用戶行為追蹤
-- **Sentry**：錯誤日誌和性能監控
-- **Lighthouse**：性能評分和 SEO
-
-### 後端監控
-- **應用性能監控（APM）**：New Relic / Datadog
-- **日誌聚合**：ELK Stack (Elasticsearch, Logstash, Kibana)
-- **Uptime 監控**：Uptime Robot / Pingdom
-
----
-
-## 🔧 故障排除
-
-### 常見問題
-
-**1. Docker 構建失敗**
 ```bash
-# 清理 Docker 快取
-docker system prune -a
+#!/bin/bash
 
-# 重新構建
-docker compose build --no-cache
+# 晚上例行檢查腳本
+# 執行時間：每天 21:00 UTC (台北時間 05:00)
+
+echo "🌙 晚上例行檢查開始：$(date '+%Y-%m-%d %H:%M:%S')"
+
+# 1. 檢查 Git 狀態
+echo "📚 檢查 Git 狀態..."
+cd /home/user/repo/tools-sys
+git fetch --all --prune
+git status
+
+# 2. 檢查系統健康
+echo "💾 檢查系統健康..."
+DISK=$(df -h | grep -E "sda|sdb|sdc")
+echo "$DISK"
+MEM=$(free -h)
+echo "$MEM"
+
+# 3. 檢查 Docker 容器
+echo "🐳 檢查 Docker 容器..."
+CONTAINERS=$(docker ps -a --format "table {{.Names}}\t{{.Status}}")
+echo "$CONTAINERS"
+docker system df -v | grep -E "local|Images|Containers"
+
+# 4. 檢查運行中的任務
+echo "⏰ 檢查運行中的任務..."
+# 這裡可以檢查特定任務的狀態
+
+# 5. 生成報告
+echo "✅ 晚上例行檢查完成：$(date '+%Y-%m-%d %H:%M:%S')"
 ```
 
-**2. 前端無法訪問後端 API**
-```bash
-# 檢查容器網絡
-docker network inspect tools-sys-network
+---
 
-# 檢查 Nginx 配置
-docker exec frontend nginx -t
+## 📊 任務完成報告格式
+
+### 每日報告格式
+
+```json
+{
+  "date": "2026-02-21",
+  "time": "21:00:00 UTC",
+  "type": "daily_report",
+  "morning_check": {
+    "start_time": "03:00:00",
+    "end_time": "03:30:00",
+    "duration": "30 minutes",
+    "status": "completed",
+    "completed_tasks": [...],
+    "pending_tasks": [...]
+  },
+  "evening_check": {
+    "start_time": "13:00:00",
+    "end_time": "13:30:00",
+    "duration": "30 minutes",
+    "status": "completed",
+    "git_status": {
+      "unpushed_commits": 0,
+      "unmerged_branches": 0,
+      "clean_working_dir": true
+    },
+    "system_health": {
+      "disk_usage": "15%",
+      "memory_usage": "28%",
+      "docker_containers": "running: 2"
+    },
+    "tasks_status": {
+      "nightly_optimization": "completed",
+      "financial_report": "completed"
+    },
+    "next_day_plan": [...]
+  }
+}
 ```
-
-**3. Git 推送被拒絕**
-```bash
-# 拉取最新代碼
-git pull --rebase
-
-# 解決衝突後再推送
-git push
-```
-
----
-
-## 📞 聯繫方式
-
-### 開發團隊
-- **開發者**：Cat (cat@tools-sys.com)
-- **老闆**：Terrence (terrence@tools-sys.com)
-- **聯繫方式**：Telegram、Email、專案管理工具
-
-### 開會時間
-- **每週一**：15:00 (UTC+8) - 進度同步
-- **每週五**：16:00 (UTC+8) - 發布準備
-- **每週日**：臨時需要 - 緊急修復
-
----
-
-## 🎓 學習與成長
-
-### 技術債務
-- [x] 基礎 Git 工作流
-- [x] 基礎 Docker 操作
-- [ ] 高級 Git Rebase 操作
-- [ ] CI/CD 流程優化
-- [ ] Kubernetes 部署
-
-### 個人成長
-- [ ] 代碼審查能力
-- [ ] 技術文檔撰寫
-- [ ] 團隊溝通技巧
-- [ ] 項導開發能力
-
----
-
-## 📝 版本控制策略
-
-### 分支策略
-- `main`: 生產環境分支
-- `develop`: 開發主分支
-- `feature/*`: 功能開發分支
-- `bugfix/*`: Bug 修復分支
-- `hotfix/*`: 緊急修復分支
-
-### 版本號規範
-遵循語義化版本：`MAJOR.MINOR.PATCH`
-- `MAJOR`: 不兼容的 API 變更
-- `MINOR`: 向後兼容的新功能
-- `PATCH`: 向後兼容的 Bug 修復
-
-範例：`1.0.0` → `1.1.0` → `2.0.0`
-
----
-
-## 🔐 安全策略
-
-### 密碼和金鑰管理
-- ✅ 使用環境變數存儲敏感信息
-- ✅ 永不提交密碼到 Git
-- ✅ 使用 `.env` 文件並添加到 `.gitignore`
-- ✅ 定期更換密碼和金鑰
-
-### 依賴管理
-- ✅ 定期更新依賴包
-- ✅ 使用 `npm audit` 和 `pip-audit` 檢查漏洞
-- ✅ 鎖定主要版本號避免意外破壞
-
----
-
-## 🎯 項目路線圖
-
-### 階段一（已完成）
-- ✅ 專案架構設計
-- ✅ 基礎開發環境搭建
-- ✅ 前端登入頁面
-- ✅ 基礎 Docker 部署
-
-### 階段二（進行中）
-- ⏳ 前端主要功能開發
-- ⏳ 後端 API 開發
-- ⏳ 用戶認證系統
-- ⏳ 數據庫設計與實作
-
-### 階段三（待規劃）
-- ⏳ 高級功能開發
-- ⏳ 性能優化
-- ⏳ 安全加固
-- ⏳ 企業版功能
-
----
-
-## 📞 聯繫與支持
-
-### 工作時間
-- **平時**：週一至週五，09:00-18:00 (UTC+8)
-- **週末**：臨時響應緊急問題
-- **假日**：提前安排工作覆蓋
-
-### 緊急聯繫
-- **老闆手機**：[隱私保護]
-- **老闆 Email**：[隱私保護]
-- **緊急聯繫**：優先響應
-
----
-
-## 📊 性能指標
-
-### 前端性能目標
-- **首屏加載時間 (FCP)**: < 1.5s
-- **可交互時間 (TTI)**: < 3s
-- **速度指標 (Lighthouse)**: > 90
-- **包大小**: < 150KB (Gzip 後)
-
-### 後端性能目標
-- **API 響應時間**: < 100ms (P95)
-- **併發處理能力**: > 1000 req/s
-- **系統可用性**: > 99.9%
-- **數據庫查詢優化**: < 10ms
-
----
-
-## 🏆 總結
-
-本規範文件旨在幫助團隊：
-- 🔧 保持代碼質量
-- 🚀 加速開發流程
-- 📚 統一開發標準
-- 🔐 確保系統安全
-- 📈 持續改進性能
-
-**記住：規範是為了幫助我們，不是束縛我們。在必要時，靈活調整！**
 
 ---
 
 *最後更新：2026-02-21*
 *維護者：Cat*
-*版本：1.0.0*
