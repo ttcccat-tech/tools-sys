@@ -144,7 +144,7 @@ async def get_tool(tool_id: int):
     return {"status": "success", "data": dict(tool)}
 
 @app.post("/api/tools")
-async def create_tool(tool: ToolRequest):
+async def create_tool(tool: ToolCreate):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute(
@@ -152,9 +152,49 @@ async def create_tool(tool: ToolRequest):
         (tool.name, tool.description, tool.version, tool.route, tool.icon)
     )
     conn.commit()
+    tool_id = cursor.lastrowid
     conn.close()
-    
-    return {"status": "success", "data": {"message": "工具已建立"}}
+
+    return {"status": "success", "data": {"id": tool_id, "message": "工具已建立"}}
+
+@app.put("/api/tools/{tool_id}")
+async def update_tool(tool_id: int, tool: ToolCreate):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # 檢查工具是否存在
+    cursor.execute("SELECT id FROM tools WHERE id = ?", (tool_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return {"status": "error", "message": "工具不存在"}
+
+    # 更新工具
+    cursor.execute(
+        "UPDATE tools SET name = ?, description = ?, version = ?, route = ?, icon = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+        (tool.name, tool.description, tool.version, tool.route, tool.icon, tool_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return {"status": "success", "data": {"message": "工具已更新"}}
+
+@app.delete("/api/tools/{tool_id}")
+async def delete_tool(tool_id: int):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # 檢查工具是否存在
+    cursor.execute("SELECT id FROM tools WHERE id = ?", (tool_id,))
+    if not cursor.fetchone():
+        conn.close()
+        return {"status": "error", "message": "工具不存在"}
+
+    # 刪除工具
+    cursor.execute("DELETE FROM tools WHERE id = ?", (tool_id,))
+    conn.commit()
+    conn.close()
+
+    return {"status": "success", "data": {"message": "工具已刪除"}}
 
 if __name__ == "__main__":
     import uvicorn

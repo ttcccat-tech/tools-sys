@@ -1,324 +1,112 @@
 import React, { useState, useEffect } from 'react'
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 
-console.log('🚀 極化版 Tools-Sys 啟動')
+console.log('🚀 Tools-Sys 啟動')
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  // ✅ 從 localStorage 讀取登入狀態
+  // 從 localStorage 讀取登入狀態
   useEffect(() => {
     const savedLoggedIn = localStorage.getItem('isLoggedIn')
-    console.log('📦 已保存的登入狀態:', savedLoggedIn)
-    
-    if (savedLoggedIn === 'true') {
-      setIsLoggedIn(true)
-      const savedUsername = localStorage.getItem('username')
-      const savedLoginTime = localStorage.getItem('loginTime')
-      setMessage(`歡迎回來，${savedUsername}！登入時間：${new Date(savedLoginTime).toLocaleString('zh-TW')}`)
-    } else {
-      setMessage('請登入以使用系統功能')
-    }
-  }, [])
+    const savedUsername = localStorage.getItem('username')
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    
-    console.log('🔑 開始登入...', {
-      username,
-      timestamp: new Date().toISOString()
-    })
-    
-    // 模擬 API 調用
-    setTimeout(() => {
-      // ✅ 保存登入狀態到 localStorage
-      localStorage.setItem('isLoggedIn', 'true')
-      localStorage.setItem('username', username)
-      localStorage.setItem('loginTime', new Date().toISOString())
-      
-      // ✅ 更新本地狀態
+    if (savedLoggedIn === 'true' && savedUsername) {
       setIsLoggedIn(true)
-      setMessage(`登入成功！歡迎，${username}！登入時間：${new Date().toLocaleString('zh-TW')}`)
-      
-      console.log('✅ 登入成功！登入狀態已保存到 localStorage')
-      
-      alert('登入成功！（尚未連接後端 API）')
-    }, 500)
-  }
+      setUsername(savedUsername)
+    } else {
+      // 未登入時重定向到登入頁面
+      if (location.pathname !== '/login') {
+        navigate('/login', { replace: true })
+      }
+    }
+  }, [navigate, location.pathname])
 
   const handleLogout = () => {
-    console.log('🚪 開始登出...')
-    
-    // ✅ 清除登入狀態
     localStorage.removeItem('isLoggedIn')
     localStorage.removeItem('username')
     localStorage.removeItem('loginTime')
-    
-    // ✅ 更新本地狀態
     setIsLoggedIn(false)
     setUsername('')
-    setPassword('')
-    setMessage('請登入以使用系統功能')
-    
-    console.log('✅ 登出成功！')
+    navigate('/login')
   }
 
-  if (!isLoggedIn) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#667eea',
-        color: 'white',
-        fontFamily: 'Arial, sans-serif',
-        padding: '20px'
-      }}>
-        <div style={{
-          width: '100%',
-          maxWidth: '400px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '16px',
-          padding: '40px',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-        }}>
-          <h1 style={{
-            fontSize: '32px',
-            fontWeight: 'bold',
-            marginBottom: '20px',
-            textAlign: 'center'
-          }}>
-            Tools-Sys 登入
-          </h1>
-          
-          <p style={{
-            fontSize: '16px',
-            marginBottom: '30px',
-            textAlign: 'center',
-            opacity: 0.8
-          }}>
-            {message}
-          </p>
-
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>
-                用戶名：
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="請輸入用戶名"
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  fontSize: '16px',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  outline: 'none'
-                }}
-              />
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px' }}>
-                密碼：
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="請輸入密碼"
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  fontSize: '16px',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  outline: 'none'
-                }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              style={{
-                width: '100%',
-                padding: '14px',
-                fontSize: '18px',
-                fontWeight: 'bold',
-                backgroundColor: '#4ade80',
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              登入系統
-            </button>
-          </form>
-        </div>
-      </div>
-    )
+  // 登入頁面不顯示導航
+  if (location.pathname === '/login' || !isLoggedIn) {
+    return <Outlet />
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#10b981',
-      color: 'white',
-      fontFamily: 'Arial, sans-serif',
-      padding: '20px'
-    }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '600px',
-        textAlign: 'center'
-      }}>
-        <h1 style={{
-          fontSize: '48px',
-          fontWeight: 'bold',
-          marginBottom: '20px',
-          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)'
-        }}>
-          👤 {username || '用戶'}
-        </h1>
-        
-        <p style={{
-          fontSize: '24px',
-          marginBottom: '10px',
-          opacity: 0.9
-        }}>
-          歡迎回來！
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* 頂部導航欄 */}
+      <nav className="glass sticky top-0 z-50 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center space-x-2 text-white hover:text-purple-300 transition">
+                <span className="text-2xl">🔧</span>
+                <span className="font-bold text-xl">Tools-Sys</span>
+              </Link>
+            </div>
 
-        <p style={{
-          fontSize: '18px',
-          marginBottom: '40px',
-          opacity: 0.7',
-          lineHeight: '1.6'
-        }}>
-          {message}
-        </p>
+            {/* 導航連結 */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Link
+                to="/"
+                className={`px-4 py-2 rounded-lg transition ${
+                  location.pathname === '/'
+                    ? 'bg-purple-500/20 text-purple-300'
+                    : 'text-gray-300 hover:bg-white/10'
+                }`}
+              >
+                工具中心
+              </Link>
+              <Link
+                to="/admin"
+                className={`px-4 py-2 rounded-lg transition ${
+                  location.pathname.startsWith('/admin')
+                    ? 'bg-purple-500/20 text-purple-300'
+                    : 'text-gray-300 hover:bg-white/10'
+                }`}
+              >
+                管理後台
+              </Link>
+            </div>
 
-        <div style={{
-          display: 'flex',
-          gap: '20px',
-          justifyContent: 'center',
-          marginBottom: '40px'
-        }}>
-          <button
-            onClick={() => alert('查詢功能開發中')}
-            style={{
-              padding: '15px 30px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '8px',
-              color: 'white',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            🎯 查詢
-          </button>
-
-          <button
-            onClick={() => alert('報表功能開發中')}
-            style={{
-              padding: '15px 30px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '8px',
-              color: 'white',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            📊 報表
-          </button>
-
-          <button
-            onClick={() => alert('設定功能開發中')}
-            style={{
-              padding: '15px 30px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '8px',
-              color: 'white',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            ⚙️ 設定
-          </button>
-
-          <button
-            onClick={() => alert('搜索功能開發中')}
-            style={{
-              padding: '15px 30px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '8px',
-              color: 'white',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            🔍 搜索
-          </button>
+            {/* 使用者信息 */}
+            <div className="flex items-center space-x-4">
+              <div className="hidden sm:flex items-center space-x-2">
+                <span className="text-gray-300">👤</span>
+                <span className="text-white font-medium">{username}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-lg bg-red-500/20 text-red-300 hover:bg-red-500/30 transition"
+              >
+                登出
+              </button>
+            </div>
+          </div>
         </div>
+      </nav>
 
-        <p style={{
-          fontSize: '16px',
-          opacity: 0.6',
-          marginBottom: '40px'
-        }}>
-          系統狀態：✅ 已登入
-        </p>
+      {/* 主要內容區域 */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Outlet />
+      </main>
 
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: '16px 40px',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            backgroundColor: '#ef4444',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            boxShadow: '0 4px 6px rgba(239, 68, 68, 0.3)'
-          }}
-        >
-          🚪 登出系統
-        </button>
-      </div>
+      {/* 頁脚 */}
+      <footer className="mt-auto py-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-gray-400 text-sm">
+            Tools-Sys © 2026 | Developed by Cat
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }
