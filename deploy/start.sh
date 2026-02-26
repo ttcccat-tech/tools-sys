@@ -56,9 +56,9 @@ print('✅ 資料庫初始化完成')
 nginx -g 'daemon off;' &
 sleep 1
 
-# 啟動 FastAPI（在前台）
+# 啟動 FastAPI（在不同端口，避免與 Nginx 衝突）
 cd /app
-uvicorn main:app --host 0.0.0.0 --port 80 &
+uvicorn main:app --host 0.0.0.0 --port 8000 &
 sleep 1
 
 echo "✅ 服務已啟動！"
