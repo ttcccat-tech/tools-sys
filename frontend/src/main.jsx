@@ -29,6 +29,7 @@ function Main() {
 
           {/* 管理後台 */}
           <Route path="admin" element={<Admin />} />
+          <Route path="admin/tools" element={<Admin />} />
 
           {/* 404 重定向 */}
           <Route path="*" element={<Navigate to="/" replace />} />
