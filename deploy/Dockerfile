@@ -61,6 +61,9 @@ COPY --from=frontend-build /app/dist /usr/share/nginx/html
 # 複製 Nginx 配置
 COPY deploy/nginx-full.conf /etc/nginx/conf.d/default.conf
 
+# 移除默認站點配置，避免衝突
+RUN rm -f /etc/nginx/sites-enabled/default
+
 # 初始化數據庫目錄
 RUN mkdir -p /app/db
 COPY db/schema.sql /app/db/schema.sql
